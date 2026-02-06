@@ -64,7 +64,7 @@ export function Header({
     <header className="flex-shrink-0 border-b border-border bg-card px-6 py-4 rounded-b-2xl">
       <div className="flex items-center justify-between gap-4">
         <h1 className="text-heading font-semibold text-foreground">
-          TMG申請
+          TMG精算
         </h1>
 
         <div className="flex items-center gap-4">

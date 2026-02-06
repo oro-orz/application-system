@@ -25,6 +25,11 @@ const PROMPT = `あなたは経理担当者のアシスタントです。この�
 6. ツール名と支払先が一致するか（完全一致でなくても、関連性があればOK）
 7. 不審点や注意事項はあるか
 
+【重要：Apple/Google Play 領収書とアプリ内課金】
+- 領収書の支払先がApple（iTunes/App Store）やGoogle Playの場合は問題なし。Canva・CapCut等のアプリ内課金は領収書に「Apple」等と表示されることがある。
+- 申請ツールがCanva・CapCut等で、領収書にそのツール名（例：Canva、CapCut）または該当する商品名が明記されている場合は、申請ツールと同一とみなし vendorMatch=true、findings に追加せず、金額・日付が一致していれば riskLevel は OK でよい。
+- 領収書がApple/Google請求で、領収書から申請ツール（Canva等）が特定できない場合のみ、vendorMatch=false とし、findingsに「領収書はApple（またはGoogle）請求。申請ツールは{ツール名}。領収書にツール名の記載がなく要確認」を追加し、riskLevel は WARNING とする。
+
 以下のJSON形式で回答してください（JSON以外は出力しないでください）：
 {
   "extractedAmount": 数値（必ず日本円換算後の金額）,

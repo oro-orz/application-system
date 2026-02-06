@@ -13,6 +13,17 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import { Application, FilterOptions } from "@/lib/types";
+import type { CheckStatus } from "@/lib/types";
+import { LOCATIONS } from "@/lib/constants";
+
+/** 未承認系を上に、経理承認済み以降を下に並べるための順序 */
+const STATUS_SORT_ORDER: Record<CheckStatus, number> = {
+  未確認: 0,
+  差し戻し: 1,
+  経理承認済: 2,
+  役員確認待ち: 3,
+  最終承認済: 4,
+};
 import { LoadingSpinner } from "@/components/shared/LoadingSpinner";
 import { EmptyState } from "@/components/shared/EmptyState";
 
@@ -34,6 +45,7 @@ export function LeftPanel({
   const [filters, setFilters] = useState<FilterOptions>({
     searchQuery: "",
     checkStatus: "all",
+    location: "all",
   });
 
   const filteredApplications = applications.filter((app) => {
@@ -54,8 +66,16 @@ export function LeftPanel({
       return false;
     }
 
+    if (filters.location && filters.location !== "all" && app.location !== filters.location) {
+      return false;
+    }
+
     return true;
   });
+
+  const sortedApplications = [...filteredApplications].sort(
+    (a, b) => STATUS_SORT_ORDER[a.checkStatus] - STATUS_SORT_ORDER[b.checkStatus]
+  );
 
   if (isLoading) {
     return (
@@ -80,7 +100,7 @@ export function LeftPanel({
     <div className="flex flex-col h-full border border-border rounded-2xl overflow-hidden">
       <div className="p-4 border-b border-border">
         <h2 className="text-title font-semibold text-foreground mb-3">
-          申請一覧 ({filteredApplications.length})
+          申請一覧 ({sortedApplications.length})
         </h2>
 
         <div className="relative mb-3">
@@ -98,31 +118,51 @@ export function LeftPanel({
           />
         </div>
 
-        <Select
-          value={filters.checkStatus ?? "all"}
-          onValueChange={(value) =>
-            setFilters({
-              ...filters,
-              checkStatus: value as FilterOptions["checkStatus"],
-            })
-          }
-        >
-          <SelectTrigger className="w-full">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">全て</SelectItem>
-            <SelectItem value="未確認">未確認</SelectItem>
-            <SelectItem value="経理承認済">経理承認済</SelectItem>
-            <SelectItem value="差し戻し">差し戻し</SelectItem>
-            <SelectItem value="役員確認待ち">役員確認待ち</SelectItem>
-            <SelectItem value="最終承認済">最終承認済</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-2">
+          <Select
+            value={filters.checkStatus ?? "all"}
+            onValueChange={(value) =>
+              setFilters({
+                ...filters,
+                checkStatus: value as FilterOptions["checkStatus"],
+              })
+            }
+          >
+            <SelectTrigger className="flex-1">
+              <SelectValue placeholder="全て" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全て</SelectItem>
+              <SelectItem value="未確認">未確認</SelectItem>
+              <SelectItem value="経理承認済">経理承認済</SelectItem>
+              <SelectItem value="差し戻し">差し戻し</SelectItem>
+              <SelectItem value="役員確認待ち">役員確認待ち</SelectItem>
+              <SelectItem value="最終承認済">最終承認済</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={filters.location ?? "all"}
+            onValueChange={(value) =>
+              setFilters({ ...filters, location: value })
+            }
+          >
+            <SelectTrigger className="flex-1">
+              <SelectValue placeholder="拠点" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">全て</SelectItem>
+              {LOCATIONS.map((loc) => (
+                <SelectItem key={loc} value={loc}>
+                  {loc}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        {filteredApplications.length === 0 ? (
+        {sortedApplications.length === 0 ? (
           <div className="p-6">
             <EmptyState
               title="申請がありません"
@@ -131,7 +171,7 @@ export function LeftPanel({
           </div>
         ) : (
           <ApplicationList
-            applications={filteredApplications}
+            applications={sortedApplications}
             selectedId={selectedId}
             onSelect={onSelect}
           />

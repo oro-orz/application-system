@@ -52,6 +52,7 @@ export default function ApprovalPage() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
+        applicationId: id,
         receiptUrl: app.receiptUrl,
         tool: app.tool,
         amount: app.amount,

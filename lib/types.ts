@@ -61,6 +61,7 @@ export interface FilterOptions {
   searchQuery?: string;
   aiRiskLevel?: AIRiskLevel | "all";
   checkStatus?: CheckStatus | "all";
+  location?: string;
 }
 
 export interface CheckSubmitPayload {

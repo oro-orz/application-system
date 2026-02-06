@@ -33,3 +33,64 @@
     font-family: var(--font-noto-sans-jp), ui-sans-serif, system-ui, sans-serif;
   }
 }
+
+/* 領収書・クレカ明細モーダル印刷時：モーダル内容のみ印刷 */
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+  body.receipt-modal-open * {
+    visibility: hidden;
+  }
+  body.receipt-modal-open .image-modal-overlay,
+  body.receipt-modal-open .image-modal-overlay * {
+    visibility: visible;
+  }
+  body.receipt-modal-open .image-modal-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    background: white !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  body.receipt-modal-open .image-modal-content {
+    position: static !important;
+    max-height: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  /* 印刷時：画像をA4の中央に1枚にコンパクトに収める（縦長スクショ等も縮小） */
+  body.receipt-modal-open .image-modal-printable {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    min-height: 0 !important;
+  }
+  body.receipt-modal-open .image-modal-printable img {
+    max-width: 100% !important;
+    max-height: 250mm !important;  /* A4高さ297mm - 余白で1枚に収める */
+    width: auto !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+  /* 印刷時：申請情報を紙の左上にコンパクトに表示 */
+  body.receipt-modal-open .application-info-print {
+    position: absolute !important;
+    left: 12px !important;
+    top: 12px !important;
+    margin: 0 !important;
+    padding-left: 1.2rem !important;
+    font-size: 11px !important;
+    line-height: 1.4 !important;
+    list-style: disc !important;
+  }
+}

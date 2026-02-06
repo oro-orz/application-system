@@ -14,7 +14,7 @@ interface RightPanelProps {
   onCheckSubmitted: () => void;
 }
 
-const IMAGE_AREA_MIN_HEIGHT = "min-h-[420px]";
+const IMAGE_AREA_MIN_HEIGHT = "min-h-[480px]";
 
 export function RightPanel({
   application,
@@ -39,22 +39,27 @@ export function RightPanel({
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
-      <div className="flex-shrink-0 p-4 border-b border-border bg-muted/30 text-center">
-        <div
-          className={cn(
-            statusClass,
-            "text-xl font-semibold py-2 px-4 rounded-xl border-0 inline-block"
-          )}
-        >
-          {application.checkStatus}
-        </div>
+      <div
+        className={cn(
+          "flex-shrink-0 p-4 rounded-xl text-center mx-4 mt-4 mb-2 border-0 text-xl font-semibold",
+          statusClass
+        )}
+      >
+        {application.checkStatus}
       </div>
 
-      <div className={cn("flex-1 min-h-0 overflow-y-auto p-4", IMAGE_AREA_MIN_HEIGHT)}>
-        <div className={cn("rounded-xl border border-border bg-muted/20 overflow-hidden", IMAGE_AREA_MIN_HEIGHT)}>
+      <div className={cn("flex-1 min-h-0 overflow-y-auto border-t border-border bg-card", IMAGE_AREA_MIN_HEIGHT)}>
+        <div className={cn("min-h-full overflow-hidden", IMAGE_AREA_MIN_HEIGHT)}>
           <ReceiptViewer
             receiptUrl={application.receiptUrl}
             creditUrl={application.creditUrl}
+            applicationInfo={{
+              applicationDate: application.applicationDate,
+              employeeName: application.employeeName,
+              location: application.location,
+              tool: application.tool,
+              amount: application.amount,
+            }}
           />
         </div>
       </div>

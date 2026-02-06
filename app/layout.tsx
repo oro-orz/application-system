@@ -10,8 +10,8 @@ const notoSansJP = Noto_Sans_JP({
 });
 
 export const metadata: Metadata = {
-  title: "TMG申請",
-  description: "TMG申請 承認システム",
+  title: "TMG精算",
+  description: "TMG精算 承認システム",
 };
 
 export default function RootLayout({
@@ -20,8 +20,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ja" className={notoSansJP.variable}>
-      <body className="antialiased font-sans">{children}</body>
+    <html lang="ja" className={notoSansJP.variable} suppressHydrationWarning>
+      <body className="antialiased font-sans" suppressHydrationWarning>
+        {children}
+      </body>
     </html>
   );
 }

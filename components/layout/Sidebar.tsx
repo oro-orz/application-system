@@ -7,7 +7,7 @@ import { faArchive } from "@fortawesome/free-solid-svg-icons";
 import { faCalendarDays } from "@fortawesome/free-solid-svg-icons";
 
 const navItems = [
-  { href: "/", icon: faFileLines, label: "TMG申請" },
+  { href: "/", icon: faFileLines, label: "TMG精算" },
   { href: "/archive", icon: faArchive, label: "アーカイブ" },
   { href: "/leave", icon: faCalendarDays, label: "休暇申請" },
 ];

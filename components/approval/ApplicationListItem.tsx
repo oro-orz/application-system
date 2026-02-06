@@ -17,6 +17,9 @@ export function ApplicationListItem({
   isSelected,
   onClick,
 }: ApplicationListItemProps) {
+  const isAccountingApprovedOnly = application.checkStatus === "経理承認済";
+  const mutedClass = isAccountingApprovedOnly ? "text-foreground/45" : "";
+
   return (
     <button
       type="button"
@@ -29,7 +32,12 @@ export function ApplicationListItem({
       )}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-body font-semibold text-foreground truncate min-w-0">
+        <span
+          className={cn(
+            "text-body font-semibold truncate min-w-0",
+            mutedClass || "text-foreground"
+          )}
+        >
           {application.employeeName}
         </span>
         {application.aiRiskLevel && (
@@ -37,10 +45,19 @@ export function ApplicationListItem({
         )}
       </div>
       <div className="flex items-center justify-between gap-2 mt-0.5 text-caption">
-        <span className="text-foreground truncate min-w-0">{application.tool}</span>
+        <span
+          className={cn("truncate min-w-0", mutedClass || "text-foreground")}
+        >
+          {application.tool}
+        </span>
         <StatusBadge status={application.checkStatus} />
       </div>
-      <div className="mt-1 font-semibold text-primary text-body">
+      <div
+        className={cn(
+          "mt-1 font-semibold text-body",
+          mutedClass || "text-primary"
+        )}
+      >
         {formatCurrency(application.amount)}
       </div>
     </button>

@@ -6,6 +6,14 @@ const config: Config = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./lib/**/*.{js,ts,jsx,tsx}",
+  ],
+  safelist: [
+    "bg-[#EF4343]",
+    "border-[#EF4343]",
+    "text-white",
+    "bg-purple-600",
+    "border-purple-600",
   ],
   theme: {
     extend: {

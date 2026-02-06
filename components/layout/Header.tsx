@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Select,
   SelectContent,
@@ -8,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { getMonthOptions } from "@/lib/utils";
 import { Application } from "@/lib/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,7 +18,10 @@ import {
   faCircleCheck,
   faClock,
   faBan,
+  faRightFromBracket,
 } from "@fortawesome/free-solid-svg-icons";
+import { getFirebaseAuth } from "@/lib/firebase";
+import { signOut } from "firebase/auth";
 
 interface HeaderProps {
   targetMonth: string;
@@ -56,9 +61,21 @@ export function Header({
   onMonthChange,
   applications,
 }: HeaderProps) {
+  const router = useRouter();
   const monthOptions = getMonthOptions(12);
   const { applied, approved, pending, rejected } =
     countByStatus(applications);
+
+  async function handleLogout() {
+    try {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
+      const auth = getFirebaseAuth();
+      if (auth) await signOut(auth);
+    } catch {
+      // continue to redirect
+    }
+    router.replace("/login");
+  }
 
   return (
     <header className="flex-shrink-0 border-b border-border bg-card px-6 py-4 rounded-b-2xl">
@@ -101,6 +118,17 @@ export function Header({
               </span>
             </div>
           </Card>
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="rounded-xl"
+            onClick={handleLogout}
+            title="ログアウト"
+          >
+            <FontAwesomeIcon icon={faRightFromBracket} className="mr-1.5" />
+            ログアウト
+          </Button>
         </div>
       </div>
     </header>

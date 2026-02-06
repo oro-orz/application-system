@@ -6,6 +6,7 @@
 
 ### 実装済み機能
 
+- **ログイン**: Firebase（Google）認証。所属課・役職・メール許可リストでアクセス制御。未登録／権限なし時はエラーメッセージを表示。
 - **左右分割UI**: 申請一覧（左）と詳細（右）のシンプルな画面構成
 - **AI自動チェック**: Claude APIによる領収書の自動読み取り・整合性チェック
 - **二段階承認フロー**:
@@ -46,6 +47,14 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 
 ※ 承認結果はスプシには書き戻しません。経理・役員の意思疎通用にのみ Supabase に保存します。
 
+#### Firebase 認証の設定（ログイン）
+
+- **クライアント**: `NEXT_PUBLIC_FIREBASE_PROJECT_ID`, `NEXT_PUBLIC_FIREBASE_API_KEY`, `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`, `NEXT_PUBLIC_FIREBASE_APP_ID`（Firebase Console のプロジェクト設定から取得）
+- **サーバー**: `FIREBASE_SERVICE_ACCOUNT_KEY`（Service Account の JSON を文字列で設定）
+- **セッション**: `AUTH_SECRET`（32文字以上のランダム文字列。JWT 署名に使用）
+- **BigQuery**: `BIGQUERY_PROJECT_ID`, `BIGQUERY_DATASET_ID`, `BIGQUERY_LOCATION`, `GOOGLE_SERVICE_ACCOUNT_KEY`（社員マスタ参照）
+- **ログイン許可条件**: `ALLOWED_DEPARTMENTS`（例: `システム課,経理課`）、`ALLOWED_ROLE`（例: `役員`）、`ALLOWED_LOGIN_EMAILS`（カンマ区切りのメール）。いずれかを満たすユーザーのみログイン可能。未登録の Gmail や条件を満たさない場合はログイン拒否となり、画面にメッセージを表示する。
+
 #### GAS URL について（申請一覧の表示）
 
 `NEXT_PUBLIC_GAS_API_URL` には **v1（API 用）** のコードをデプロイした URL を設定してください。申請一覧・詳細は JSON で返す API が必要です。HTML を表示するデプロイ（v2 の画面用など）の URL を設定すると「GAS が JSON ではなく HTML を返しました」というエラーになります。同じスプレッドシートに v1 のコードを入れた GAS を「ウェブアプリ」としてデプロイし、その URL をここに設定してください。
@@ -62,7 +71,7 @@ npm install
 npm run dev
 ```
 
-http://localhost:3000 にアクセス
+http://localhost:3000 にアクセス（未ログイン時は `/login` にリダイレクトされます）
 
 ### 4. GAS側の設定
 

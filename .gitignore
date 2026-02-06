@@ -38,5 +38,9 @@ next-env.d.ts
 .DS_Store
 Thumbs.db
 
+# Firebase / GCP service account keys (do not commit)
+firebase-service-account.json
+*-service-account*.json
+
 # Misc
 *.pem

@@ -43,7 +43,7 @@ export function Sidebar({ bulkCheckProps }: SidebarProps) {
     let total = 0;
     try {
       while (offset !== null) {
-        const res = await fetch("/api/ai-check-bulk", {
+        const res: Response = await fetch("/api/ai-check-bulk", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

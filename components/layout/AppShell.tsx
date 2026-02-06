@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Sidebar } from "./Sidebar";
+import { Sidebar, type SidebarBulkCheckProps } from "./Sidebar";
 import { Footer } from "./Footer";
 
 interface AppShellProps {
@@ -9,13 +9,15 @@ interface AppShellProps {
   left: ReactNode;
   center: ReactNode;
   right: ReactNode;
+  /** 精算トップで一括AIチェックを表示するとき渡す */
+  sidebarBulkCheckProps?: SidebarBulkCheckProps | null;
 }
 
-export function AppShell({ header, left, center, right }: AppShellProps) {
+export function AppShell({ header, left, center, right, sidebarBulkCheckProps }: AppShellProps) {
   return (
     <div className="h-screen flex flex-col bg-background">
       <div className="flex flex-1 min-h-0">
-        <Sidebar />
+        <Sidebar bulkCheckProps={sidebarBulkCheckProps} />
         <div className="flex-1 flex flex-col min-h-0 min-w-0">
           {header}
           <div className="flex-1 flex min-h-0 gap-4 p-4 overflow-hidden">

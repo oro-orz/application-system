@@ -23,10 +23,12 @@ const PROMPT = `あなたは経理担当者のアシスタントです。この�
 4. 申請金額（円）と領収書の金額（円換算後）が一致するか
 5. 発行日が対象月内か
 6. ツール名と支払先が一致するか（完全一致でなくても、関連性があればOK）
-7. 不審点や注意事項はあるか
+7. 日本の適格請求書発行事業者登録番号（T＋10桁）が領収書に記載されているか
+8. 不審点や注意事項はあるか
 
 【重要：Apple/Google Play 領収書とアプリ内課金】
 - 領収書の支払先がApple（iTunes/App Store）やGoogle Playの場合は問題なし。Canva・CapCut等のアプリ内課金は領収書に「Apple」等と表示されることがある。
+- 領収書の支払先がAppleまたはGoogle Playの場合、領収書に記載されている商品名・アプリ名（例：Canva、CapCut: 写真&動画エディター）を必ず extractedProductName に記載すること。複数ある場合は申請ツールに該当するものを優先して記載。
 - 申請ツールがCanva・CapCut等で、領収書にそのツール名（例：Canva、CapCut）または該当する商品名が明記されている場合は、申請ツールと同一とみなし vendorMatch=true、findings に追加せず、金額・日付が一致していれば riskLevel は OK でよい。
 - 領収書がApple/Google請求で、領収書から申請ツール（Canva等）が特定できない場合のみ、vendorMatch=false とし、findingsに「領収書はApple（またはGoogle）請求。申請ツールは{ツール名}。領収書にツール名の記載がなく要確認」を追加し、riskLevel は WARNING とする。
 
@@ -35,9 +37,11 @@ const PROMPT = `あなたは経理担当者のアシスタントです。この�
   "extractedAmount": 数値（必ず日本円換算後の金額）,
   "extractedDate": "YYYY-MM-DD",
   "extractedVendor": "店名またはサービス名",
+  "extractedProductName": "領収書に記載の商品・アプリ名（Apple/Google領収書の場合は内訳のサービス名。該当なしは空文字）",
   "amountMatch": true/false,
   "dateMatch": true/false,
   "vendorMatch": true/false,
+  "hasQualifiedInvoiceNumber": true/false（適格請求書発行事業者登録番号T+10桁の記載有無）,
   "riskLevel": "OK" | "WARNING" | "ERROR",
   "findings": ["検出事項1", "検出事項2"],
   "recommendation": "要確認" または "却下推奨" など補足があれば短文で（問題なければ空文字で可）,
@@ -143,6 +147,7 @@ export async function checkReceipt(
     amountMatch: false,
     dateMatch: false,
     vendorMatch: false,
+    hasQualifiedInvoiceNumber: false,
     riskLevel: "ERROR",
     findings: [message],
     recommendation: "手動確認が必要です",

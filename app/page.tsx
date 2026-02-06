@@ -127,6 +127,11 @@ export default function ApprovalPage() {
           applications={applications}
         />
       }
+      sidebarBulkCheckProps={{
+        targetMonth,
+        applications,
+        onDone: refetch,
+      }}
       left={
         <LeftPanel
           applications={applications}

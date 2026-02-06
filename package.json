@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "bulk-check": "node scripts/bulk-check.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",

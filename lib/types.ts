@@ -47,9 +47,13 @@ export interface AICheckResult {
   extractedAmount: number;
   extractedDate: string;
   extractedVendor: string;
+  /** Apple/Google領収書の場合、領収書に記載の商品・アプリ名（例: Canva, CapCut） */
+  extractedProductName?: string;
   amountMatch: boolean;
   dateMatch: boolean;
   vendorMatch: boolean;
+  /** 適格請求書発行事業者登録番号（T+10桁）の記載有無 */
+  hasQualifiedInvoiceNumber?: boolean;
   riskLevel: AIRiskLevel;
   findings: string[];
   recommendation: string;

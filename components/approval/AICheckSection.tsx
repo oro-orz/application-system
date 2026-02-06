@@ -28,10 +28,20 @@ export function AICheckSection({
 
   if (!result) return null;
 
+  const vendorDisplay =
+    result.extractedProductName?.trim()
+      ? `${result.extractedVendor}（${result.extractedProductName.trim()}）`
+      : result.extractedVendor;
+
   const rows = [
     { label: "申請金額一致", isMatch: result.amountMatch, value: formatCurrency(result.extractedAmount) },
     { label: "対象月内の日付", isMatch: result.dateMatch, value: formatDate(result.extractedDate) },
-    { label: "ツール名一致", isMatch: result.vendorMatch, value: result.extractedVendor },
+    { label: "ツール名一致", isMatch: result.vendorMatch, value: vendorDisplay },
+    {
+      label: "適格請求書登録番号",
+      isMatch: result.hasQualifiedInvoiceNumber === true,
+      value: result.hasQualifiedInvoiceNumber === true ? "記載あり" : result.hasQualifiedInvoiceNumber === false ? "記載なし" : "—",
+    },
   ];
 
   return (

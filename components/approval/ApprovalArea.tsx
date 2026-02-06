@@ -65,7 +65,10 @@ export function ApprovalArea({ application, onSubmitted }: ApprovalAreaProps) {
     }
   };
 
-  if (application.checkStatus !== "未確認" && !isExecutive) {
+  const isReadOnly =
+    application.checkStatus === "経理承認済" ||
+    application.checkStatus === "最終承認済";
+  if (isReadOnly) {
     return (
       <div className="p-4 space-y-3 text-body text-muted-foreground">
         <p>{application.accountingChecker && `担当: ${application.accountingChecker}`}</p>
@@ -78,6 +81,16 @@ export function ApprovalArea({ application, onSubmitted }: ApprovalAreaProps) {
 
   return (
     <div className="p-4 flex flex-col gap-4">
+      {(application.accountingChecker || application.accountingComment) && (
+        <div className="rounded-lg border border-border bg-muted/30 px-3 py-2 space-y-1 text-body text-muted-foreground">
+          {application.accountingChecker && (
+            <p className="text-caption font-medium text-foreground">担当: {application.accountingChecker}</p>
+          )}
+          {application.accountingComment && (
+            <p className="whitespace-pre-wrap">{application.accountingComment}</p>
+          )}
+        </div>
+      )}
       <div className="space-y-1.5">
         <label className="text-caption text-muted-foreground block">担当者コメント</label>
         <Textarea
@@ -173,21 +186,23 @@ export function ApprovalArea({ application, onSubmitted }: ApprovalAreaProps) {
               )}
             </Button>
           </div>
-          <Button
-            onClick={() => handleAccounting("accounting_reject")}
-            disabled={isSubmitting}
-            variant="destructive"
-            className="w-full rounded-xl"
-          >
-            {isSubmitting ? (
-              <LoadingSpinner className="h-4 w-4" />
-            ) : (
-              <>
-                <FontAwesomeIcon icon={faBan} className="mr-2" />
-                差し戻し
-              </>
-            )}
-          </Button>
+          {application.checkStatus !== "差し戻し" && (
+            <Button
+              onClick={() => handleAccounting("accounting_reject")}
+              disabled={isSubmitting}
+              variant="destructive"
+              className="w-full rounded-xl"
+            >
+              {isSubmitting ? (
+                <LoadingSpinner className="h-4 w-4" />
+              ) : (
+                <>
+                  <FontAwesomeIcon icon={faBan} className="mr-2" />
+                  差し戻し
+                </>
+              )}
+            </Button>
+          )}
         </div>
       )}
     </div>
